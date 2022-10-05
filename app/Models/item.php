@@ -11,7 +11,7 @@ class item extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['menu_id', 'name', 'discount', 'price', 'user_id', 'status'];
+    protected $fillable = ['menu_id', 'name', 'discount', 'price', 'user_id', 'status','description'];
 
     public function Menu(): BelongsTo
     {
