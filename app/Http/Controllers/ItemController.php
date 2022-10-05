@@ -28,9 +28,9 @@ class ItemController extends Controller
         ]);
     }
 
-    public function itemReport()
+    public function itemReport(Request $request)
     {
-        return $this->itemRepo->itemIndex();
+        return $this->itemRepo->itemIndex($request->all());
     }
 
     public function store(Request $request): RedirectResponse

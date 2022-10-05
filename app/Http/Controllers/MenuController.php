@@ -25,8 +25,10 @@ class MenuController extends Controller
         DB::beginTransaction();
         try {
             $request->validate(['name' => 'required|unique:menus']);
-            $image = $helper->uploadSingleImage($request->image);
-            menu::create($request->except('image') + ['image' => $image]);
+            if ($request->hasFile('image')) {
+                $image = $helper->uploadSingleImage($request->image);
+            }
+            menu::create($request->except('image') + ['image' => $image ?? null]);
             toast("Menu added successfully", "success");
             DB::commit();
         } catch (\Exception $e) {
@@ -44,7 +46,7 @@ class MenuController extends Controller
         try {
             $request->validate(['name' => ['required', Rule::unique('menus')->ignore($menu)]]);
             if ($request->has('image')) {
-                $image = $helper->uploadSingleImage($request->image); 
+                $image = $helper->uploadSingleImage($request->image);
             }
             $menu->update($request->except('image') + ['image' => $image ?? $menu->image]);
             toast("Menu updated successfully", "success");
