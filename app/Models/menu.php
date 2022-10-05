@@ -17,4 +17,9 @@ class menu extends Model
     {
         return $this->hasMany(item::class);
     }
+
+    public function Discount(): HasMany
+    {
+        return $this->hasMany(discount::class);
+    }
 }

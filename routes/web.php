@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\MenuController;
 use Illuminate\Support\Facades\Route;
@@ -12,4 +13,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('menu', MenuController::class)->only('index', 'store', 'update');
     Route::post('item/report',[ItemController::class,'itemReport'])->name('item.report'); 
     Route::resource('item', ItemController::class)->only('index', 'store', 'update','edit');
+    Route::resource('discount', DiscountController::class)->only('index', 'store', 'update','edit');
 });
