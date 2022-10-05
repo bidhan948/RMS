@@ -7,8 +7,7 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="name" class="form-control-label">Menu <span
-                            class="text-danger font-weight-bold">*</span></label>
+                    <label for="name" class="form-control-label">Menu </label>
                     <select id="menu_id" v-model="data.menu_id" class="form-control form-control-sm">
                         <option value="">--SELECT--</option>
                         <option :value="menu.id" v-for="(menu,menu_key) in setting_menus" v-text="menu.name"></option>
@@ -17,15 +16,13 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="name" class="form-control-label">Price range FROM <span
-                            class="text-danger font-weight-bold">*</span></label>
+                    <label for="name" class="form-control-label">Price range FROM </label>
                     <input type="text" class="form-control form-control-sm" v-model="data.from">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="name" class="form-control-label">Price range TO <span
-                            class="text-danger font-weight-bold">*</span></label>
+                    <label for="name" class="form-control-label">Price range TO </label>
                     <input type="text" class="form-control form-control-sm" v-model="data.to">
                 </div>
             </div>
