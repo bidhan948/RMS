@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\discount;
 use App\Models\menu;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -23,13 +24,30 @@ class DiscountController extends Controller
         $request->validate(['discount_type' => 'required']);
         DB::beginTransaction();
         try {
+            if ($request->discount_type) {
+                foreach ($request->menu_id as $key => $menu_id) {
+                    discount::create([
+                        'menu_id' => $menu_id,
+                        'discount' => $request->discount[$key],
+                        'd_from' => $request->from[$key],
+                        'd_to' => $request->to[$key]
+                    ]);
+                }
+            } else {
+                discount::create([
+                    'is_flat' => true,
+                    'discount' => $request->is_flat,
+                    'd_from' => $request->from,
+                    'd_to' => $request->to 
+                ]);
+            }
             DB::commit();
             toast("Discount asigned successfully", "success");
         } catch (\Exception $e) {
             DB::rollBack();
-            Alert::error("Something went wrong...");
+            // Alert::error("Something went wrong...");
+            Alert::error($e->getMessage());
         }
-
         return redirect()->back();
     }
 }

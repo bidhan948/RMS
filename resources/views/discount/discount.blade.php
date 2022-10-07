@@ -35,11 +35,28 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-12" v-if="is_flat">
-                            <div class="form-group">
-                                <label for="is_flat" class="form-control-label">Flat Discount (%)<span
-                                        class="text-danger font-weight-bold">*</span></label>
-                                <input type="text" class="form-control" name="is_flat" v-model="form_data.is_flat">
+                        <div class="row">
+                            <div class="col-md-12" v-if="is_flat">
+                                <div class="form-group">
+                                    <label for="is_flat" class="form-control-label">Flat Discount (%)<span
+                                            class="text-danger font-weight-bold">*</span></label>
+                                    <input type="text" class="form-control" name="is_flat"
+                                        v-model="form_data.is_flat">
+                                </div>
+                            </div>
+                            <div class="col-md-6" v-if="is_flat">
+                                <div class="form-group">
+                                    <label for="from" class="form-control-label">FROM<span
+                                            class="text-danger font-weight-bold px-1">*</span></label>
+                                    <input type="date" class="form-control" name="from" v-model="form_data.from">
+                                </div>
+                            </div>
+                            <div class="col-md-6" v-if="is_flat">
+                                <div class="form-group">
+                                    <label for="to" class="form-control-label">TO<span
+                                            class="text-danger font-weight-bold px-1">*</span></label>
+                                    <input type="date" class="form-control" name="to" v-model="form_data.to">
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12 shadow" v-if="is_menu">
@@ -56,6 +73,14 @@
                                         </th>
                                         <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            FROM
+                                        </th>
+                                        <th
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                            TO
+                                        </th>
+                                        <th
+                                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Description
                                         </th>
                                         <th
@@ -66,9 +91,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(loop,loop_key) in form_data.menu_id" :unique-key="true" :key="loop_key" :id="`avion-${loop_key}`">
+                                    <tr v-for="(loop,loop_key) in form_data.menu_id" :unique-key="true"
+                                        :key="loop_key" :id="`avion-${loop_key}`">
                                         <td class="text-center">
-                                            <select name="menu_id[]" v-model="form_data.menu_id[loop_key]" id="menu_id" class="form-control form-control-sm">
+                                            <select name="menu_id[]" v-model="form_data.menu_id[loop_key]"
+                                                id="menu_id" class="form-control form-control-sm">
                                                 <option value="">{{ __('--SELECT--') }}</option>
                                                 <option :value="menu.id" v-for="(menu,menu_key) in menus"
                                                     v-text="menu.name"></option>
@@ -77,6 +104,14 @@
                                         <td class="text-center">
                                             <input type="number" step="0.5" class="form-control form-control-sm"
                                                 name="discount[]" v-model="form_data.discount[loop_key]">
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="date" class="form-control form-control-sm" name="from[]"
+                                                v-model="form_data.d_from[loop_key]">
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="date" class="form-control form-control-sm" name="to[]"
+                                                v-model="form_data.d_to[loop_key]">
                                         </td>
                                         <td class="text-center">
                                             <textarea name="description[]" class="form-control form-control-sm" v-model="form_data.description[loop_key]"></textarea>
@@ -92,7 +127,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to Submit ?');">Submit</button>
+                        <button type="submit" class="btn btn-primary"
+                            onclick="return confirm('Are you sure you want to Submit ?');">Submit</button>
                     </div>
                 </div>
             </form>
@@ -136,9 +172,13 @@
             form_data: {
                 discount_type: '',
                 is_flat: '',
-                menu_id:[''],
-                discount : [],
-                description : [],
+                from: '',
+                to: '',
+                d_from: [],
+                d_to: [],
+                menu_id: [''],
+                discount: [],
+                description: [],
             }
         },
         methods: {
@@ -156,11 +196,15 @@
                 this.form_data.menu_id.push('');
                 this.form_data.discount.push('');
                 this.form_data.description.push('');
+                this.form_data.d_from.push('');
+                this.form_data.d_to.push('');
             },
-            remove : function(index){
+            remove: function(index) {
                 this.form_data.menu_id.splice(index, 1);
                 this.form_data.discount.splice(index, 1);
                 this.form_data.description.splice(index, 1);
+                this.form_data.d_from.splice(index, 1);
+                this.form_data.d_to.splice(index, 1);
             }
         },
         mounted() {
