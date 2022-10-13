@@ -143,19 +143,38 @@
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">S.No
                     </th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">
-                        Name
-                    </th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Price
+                        Discount Type
                     </th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         Discount
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Date (FROM/TO)
                     </th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action
                     </th>
                 </tr>
             </thead>
             <tbody>
-
+                @foreach ($discounts as $key => $discount)
+                    <tr>
+                        <td class="text-center">{{ $key + 1 }}</td>
+                        <td class="text-center">
+                            {{ $discount->is_flat ? config('CONSTANT.FLAT_DISCOUNT_NAME') : $discount->Menu->name }}
+                        </td>
+                        <td class="text-center">
+                            {{ $discount->discount . '%' }}
+                        </td>
+                        <td class="text-center">
+                            {{ $discount->d_from . ' / ' . $discount->d_to }}
+                            ({{ $discount->d_from <= date('Y-m-d') && $discount->d_to >= date('Y-m-d') ? 'ON-RUN' : 'EXPIRED' }})
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('discount.edit', $discount) }}"
+                                class="btn btn-sm btn-primary mt-2">Edit</a>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

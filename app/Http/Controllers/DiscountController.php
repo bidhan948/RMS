@@ -15,7 +15,11 @@ class DiscountController extends Controller
     public function index(): View
     {
         return view('discount.discount', [
-            'menus' => menu::query()->get()
+            'menus' => menu::query()->get(),
+            'discounts' => discount::query()
+                ->with('Menu')
+                ->orderBy('d_to', 'DESC')
+                ->get(),
         ]);
     }
 
@@ -38,16 +42,23 @@ class DiscountController extends Controller
                     'is_flat' => true,
                     'discount' => $request->is_flat,
                     'd_from' => $request->from,
-                    'd_to' => $request->to 
+                    'd_to' => $request->to
                 ]);
             }
             DB::commit();
             toast("Discount asigned successfully", "success");
         } catch (\Exception $e) {
             DB::rollBack();
-            // Alert::error("Something went wrong...");
-            Alert::error($e->getMessage());
+            Alert::error("Something went wrong...");
         }
         return redirect()->back();
+    }
+
+    public function edit(discount $discount): View
+    {
+        return view('discount.edit_discount', [
+            'discount' => $discount,
+            'menus' => menu::query()->get()
+        ]);
     }
 }
