@@ -57,8 +57,35 @@ class DiscountController extends Controller
     public function edit(discount $discount): View
     {
         return view('discount.edit_discount', [
-            'discount' => $discount,
+            'discount' => $discount->load('Menu'),
             'menus' => menu::query()->get()
         ]);
+    }
+
+    public function update(discount $discount, Request $request): RedirectResponse
+    {
+        $request->validate(['from' => 'required', 'to' => 'required']);
+        DB::beginTransaction();
+        try {
+            if ($request->has('is_flat')) {
+                $discount->update([
+                    'discount' => $request->is_flat,
+                    'd_from' => $request->from,
+                    'd_to' => $request->to
+                ]);
+            } else {
+                $discount->update([
+                    'discount' => $request->discount,
+                    'd_from' => $request->from,
+                    'd_to' => $request->to
+                ]);
+            }
+            DB::commit();
+            toast("Discount updated successfully", "success");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Alert::error("Something went wrong...");
+        }
+        return redirect()->back();
     }
 }
