@@ -21,12 +21,23 @@ class order extends Model
         'status',
         'description',
         'discount',
-        'user_id'
+        'user_id',
+        'token'
     ];
 
     public function Item(): BelongsTo
     {
         return $this->belongsTo(item::class);
+    }
+
+    public function Table(): BelongsTo
+    {
+        return $this->belongsTo(table::class);
+    }
+
+    public function Menu(): BelongsTo
+    {
+        return $this->belongsTo(menu::class);
     }
 
     // over riding orm to insert user id by default

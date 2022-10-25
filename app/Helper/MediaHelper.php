@@ -43,4 +43,5 @@ class MediaHelper
         }
         return $photo;
     }
+    
 }

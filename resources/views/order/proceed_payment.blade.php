@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'create Order')
+@section('title', 'Proceed Payment')
 @section('main_content')
     <div class="card" id="vue_app">
         <div class="container-fluid">
@@ -16,11 +16,8 @@
                     <div class="form-group">
                         <label for="table_id" class="form-control-label">Table number<span
                                 class="text-danger font-weight-bold">*</span></label>
-                        <select name="table_id" id="table_id" class="form-control"required>
-                            <option value="">{{ __('--SELECT--') }}</option>
-                            @foreach ($tables as $key => $table)
-                                <option value="{{ $table->id }}">{{ $table->name }}</option>
-                            @endforeach
+                        <select name="table_id" id="table_id" class="form-control"required disabled>
+                            <option value="{{$orders[0]->table_id}}">{{$orders[0]->Table->name}}</option>
                         </select>
                     </div>
                 </div>
@@ -93,7 +90,7 @@
                 </table>
                 <div class="col-6">
                     <button class="btn btn-primary" type="submit"
-                        onclick="return confirm('Are you sure you want to add to cart ?');">Add to cart</button>
+                        onclick="return confirm('Are you sure you want to submit ?');">Continue</button>
                 </div>
             </form>
         </div>
@@ -106,33 +103,24 @@
     <script>
         let i = 1;
         $(function() {
-            $("#table").css("display", "none");
-
-            $("#table_id").on("change", function() {
-               var table_id = $("#table_id").val();
-                if (table_id == "") {
-                    alert("Please select tgable no.");
-                    $("#table").css("display", "none");
-                } else {
-                    axios.get("{{route('api.getPreviousLog')}}",{
-                        params :{
-                            table_id : table_id
-                        }
-                    }).then(function(response){
-                        $("#table").css("display", "");
-                        if (response.data.count) {
-                            $("#table_body").html(response.data.html);
-                            $("#grand_total").val(response.data.grand_total);
-                            i = response.data.count;
-                            console.log(response);   
-                        }else{
-                            i = 1;
-                        }
-                    }).catch(function(error){
-                        alert("Something went wrong...");
-                    });
-                }
-            });
+               var table_id = @json($orders[0]->table_id);
+                axios.get("{{route('api.getPreviousLog')}}",{
+                    params :{
+                        table_id : table_id
+                    }
+                }).then(function(response){
+                    // $("#table").css("display", "");
+                    if (response.data.count) {
+                        $("#table_body").html(response.data.html);
+                        $("#grand_total").val(response.data.grand_total);
+                        i = response.data.count;
+                        console.log(response);   
+                    }else{
+                        i = 0;
+                    }
+                }).catch(function(error){
+                    alert("Something went wrong...");
+                });
 
             $("#addMore").on("click", function() {
                 html = '<tr id="row_'+i+'">'
