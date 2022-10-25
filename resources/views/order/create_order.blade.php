@@ -81,7 +81,7 @@
                                     readonly>
                             </td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-danger mt-2"><i class="fa-solid fa-times px-1"></i> Remove</a>
+                                <a class="btn btn-sm btn-danger mt-2"><i class="fa-solid fa-times px-1" onclick="removeRow(0)"></i> Remove</a>
                             </td>
                         </tr>
                     </tbody>
@@ -109,12 +109,28 @@
             $("#table").css("display", "none");
 
             $("#table_id").on("change", function() {
-                table_id = $("#table_id").val();
+               var table_id = $("#table_id").val();
                 if (table_id == "") {
                     alert("Please select tgable no.");
                     $("#table").css("display", "none");
                 } else {
-                    $("#table").css("display", "");
+                    axios.get("{{route('api.getPreviousLog')}}",{
+                        params :{
+                            table_id : table_id
+                        }
+                    }).then(function(response){
+                        $("#table").css("display", "");
+                        if (response.data.count) {
+                            $("#table_body").html(response.data.html);
+                            $("#grand_total").val(response.data.grand_total);
+                            i = response.data.count;
+                            console.log(response);   
+                        }else{
+                            i = 0;
+                        }
+                    }).catch(function(error){
+                        alert("Something went wrong...");
+                    });
                 }
             });
 
@@ -147,7 +163,7 @@
                             +'<td class="text-center">'
                                 +'<input type="number" class="form-control form-control-sm total" name="total[]" id="total_'+i+'" readonly></td>'
                             +'<td class="text-center">'
-                                +'<a class="btn btn-sm btn-danger mt-2"><i class="fa-solid fa-times px-1"></i> Remove</a></td></tr>';
+                                +'<a class="btn btn-sm btn-danger mt-2"><i class="fa-solid fa-times px-1" onclick="removeRow('+i+')"></i> Remove</a></td></tr>';
                 
                 $("#table_body").append(html);
                 i++;
@@ -193,6 +209,12 @@
             quantity = +$("#quantity_" + params).val() || 0;
             price = +$("#price_" + params).val() || 0;
             $("#total_" + params).val(quantity * price);
+            calculateGrandTotal();
+        }
+        
+        function removeRow(params)
+        {
+            $("#row_"+params).remove();
             calculateGrandTotal();
         }
 

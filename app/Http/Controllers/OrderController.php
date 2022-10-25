@@ -30,16 +30,23 @@ class OrderController extends Controller
     {
         DB::beginTransaction();
         try {
+
+            order::query()
+            ->where('table_id', $request->table_id)
+            ->where('status', false)
+            ->delete();
+
             foreach ($request->menu_id as $key => $menu_id) {
                 order::create([
                     'menu_id' => $menu_id,
+                    'item_id' => $request->item_id[$key],
                     'table_id' => $request->table_id,
                     'quantity' => $request->quantity[$key],
                     'price' => $request->price[$key],
                     'total' => $request->quantity[$key] * $request->price[$key]
                 ]);
             }
-            toast('Successfully added to cart',"success");
+            toast('Successfully added to cart', "success");
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
