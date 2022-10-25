@@ -77,7 +77,7 @@
                                     readonly>
                             </td>
                             <td class="text-center">
-                                <input type="number" class="form-control form-control-sm" name="total[]" id="total_0"
+                                <input type="number" class="form-control form-control-sm total" name="total[]" id="total_0"
                                     readonly>
                             </td>
                             <td class="text-center">
@@ -85,10 +85,15 @@
                             </td>
                         </tr>
                     </tbody>
+                    <tr>
+                        <td class="text-center" colspan="4">Total :</td>
+                        <td class="text-center" colspan="1"> <input type="number" class="form-control form-control-sm" name="grand_total" id="grand_total"
+                            value="0" readonly></td>
+                    </tr>
                 </table>
                 <div class="col-6">
                     <button class="btn btn-primary" type="submit"
-                        onclick="return confirm('Are you sure you want to submit ?');">Add to cart</button>
+                        onclick="return confirm('Are you sure you want to add to cart ?');">Add to cart</button>
                 </div>
             </form>
         </div>
@@ -140,7 +145,7 @@
                                 +'<input type="number" class="form-control form-control-sm" name="price[]" id="price_'+i+'"readonly>'
                             +'</td>'
                             +'<td class="text-center">'
-                                +'<input type="number" class="form-control form-control-sm" name="total[]" id="total_'+i+'" readonly></td>'
+                                +'<input type="number" class="form-control form-control-sm total" name="total[]" id="total_'+i+'" readonly></td>'
                             +'<td class="text-center">'
                                 +'<a class="btn btn-sm btn-danger mt-2"><i class="fa-solid fa-times px-1"></i> Remove</a></td></tr>';
                 
@@ -188,6 +193,15 @@
             quantity = +$("#quantity_" + params).val() || 0;
             price = +$("#price_" + params).val() || 0;
             $("#total_" + params).val(quantity * price);
+            calculateGrandTotal();
+        }
+
+        function calculateGrandTotal() {
+            total = 0
+            $('.total').each(function() {
+                total += Number($(this).val()) || 0;
+            });
+            $("#grand_total").val(total);
         }
     </script>
 @endsection
