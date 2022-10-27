@@ -52,7 +52,7 @@ class ApiHelperController extends Controller
             }
             $html .= '</select>
                         </td>
-                        <td class="text-center" id="td_item' . $key . '">
+                        <td class="text-center" id="td_item_' . $key . '">
                             <select name="item_id[]" id="item_id_' . $key . '" class="form-control form-control-sm"
                                 onchange="returnPrice(' . $key . ')">
                                 <option value="' . $order->item_id . '">' . $order->Item->name . '</option></select>

@@ -63,22 +63,22 @@
                             </td>
                             <td class="text-center" id="td_item_0">
                                 <select name="item_id[]" id="item_id_0" class="form-control form-control-sm"
-                                    onchange="returnPrice(0)">
+                                    onchange="returnPrice(0)" required>
                                     <option value="">{{ __('--SELECT--') }}</option>
                                     </option>
                                 </select>
                             </td>
                             <td class="text-center">
                                 <input type="number" class="form-control form-control-sm" name="quantity[]" id="quantity_0"
-                                    value="0" oninput="calculateRowTotal(0)">
+                                    value="0" oninput="calculateRowTotal(0)" required>
                             </td>
                             <td class="text-center">
                                 <input type="number" class="form-control form-control-sm" name="price[]" id="price_0"
-                                    readonly>
+                                    readonly required>
                             </td>
                             <td class="text-center">
                                 <input type="number" class="form-control form-control-sm total" name="total[]" id="total_0"
-                                    readonly>
+                                    readonly required>
                             </td>
                             <td class="text-center">
                                 <a class="btn btn-sm btn-danger mt-2"><i class="fa-solid fa-times px-1" onclick="removeRow(0)"></i> Remove</a>
@@ -138,7 +138,7 @@
                 html = '<tr id="row_'+i+'">'
                             +'<td class="text-center">'
                                 +'<select name="menu_id[]" id="menu_id_'+i+'" class="form-control form-control-sm"'
-                                    +'onchange="returnItem('+i+')">'
+                                    +'onchange="returnItem('+i+')" required>'
                                     +'<option value="">{{ __("--SELECT--") }}</option>'
                                     +'@foreach ($menus as $menu)'
                                         +'<option value="{{ $menu->id }}">{{ $menu->name }}</option>'
@@ -148,20 +148,20 @@
                             +'</td>'
                             +'<td class="text-center" id="td_item_'+i+'">'
                                 +'<select name="item_id[]" id="item_id_'+i+'" class="form-control form-control-sm"'
-                                    +'onchange="returnPrice('+i+')">'
+                                    +'onchange="returnPrice('+i+')" required>'
                                     +'<option value="">{{ __("--SELECT--") }}</option>'
                                     +'</option>'
                                 +'</select>'
                             +'</td>'
                             +'<td class="text-center">'
                                 +'<input type="number" class="form-control form-control-sm" name="quantity[]" id="quantity_'+i+'"'
-                                    +'value="0" oninput="calculateRowTotal('+i+')">'
+                                    +'value="0" oninput="calculateRowTotal('+i+')" required>'
                             +'</td>'
                             +'<td class="text-center">'
-                                +'<input type="number" class="form-control form-control-sm" name="price[]" id="price_'+i+'"readonly>'
+                                +'<input type="number" class="form-control form-control-sm" name="price[]" id="price_'+i+'"readonly required>'
                             +'</td>'
                             +'<td class="text-center">'
-                                +'<input type="number" class="form-control form-control-sm total" name="total[]" id="total_'+i+'" readonly></td>'
+                                +'<input type="number" class="form-control form-control-sm total" name="total[]" id="total_'+i+'" readonly required></td>'
                             +'<td class="text-center">'
                                 +'<a class="btn btn-sm btn-danger mt-2"><i class="fa-solid fa-times px-1" onclick="removeRow('+i+')"></i> Remove</a></td></tr>';
                 

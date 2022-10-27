@@ -85,4 +85,9 @@ class OrderController extends Controller
             'tables' => table::query()->get()
         ]);
     }
+
+    public function proceedPaymentSubmit(Request $request,$token)
+    {
+        dd('billing on the way');
+    }
 }
