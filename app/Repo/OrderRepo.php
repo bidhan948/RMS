@@ -12,6 +12,21 @@ class OrderRepo
         return response()->json(
             order::query()
                 ->with('Table', 'Menu', 'Item')
+                ->where('status',false)
+                ->latest()
+                ->get()
+                ->groupBy('table_id')
+                ->values()
+        );
+    }
+
+
+    public function orderHistoryIndex($data)
+    {
+        return response()->json(
+            order::query()
+                ->with('Table', 'Menu', 'Item')
+                ->where('status',true)
                 ->latest()
                 ->get()
                 ->groupBy('table_id')

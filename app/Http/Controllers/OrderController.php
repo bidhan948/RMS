@@ -119,4 +119,29 @@ class OrderController extends Controller
 
         return redirect()->route('order.index');
     }
+
+    public function orderHistory(): View
+    {
+        return view('order.history');
+    }
+
+    public function historyReport(Request $request)
+    {
+        return $this->orderRepo->orderHistoryIndex($request->all());
+    }
+
+    public function printBill($token)
+    {
+        $orders = order::query()
+            ->where('token', $token)
+            ->where('status', true)
+            ->with('Table', 'Item', 'menu')
+            ->get();
+
+        abort_if(!$orders->count(), 404);
+
+        return view('order.print_bill', [
+            'orders' => $orders,
+        ]);
+    }
 }

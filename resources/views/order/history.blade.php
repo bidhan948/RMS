@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Current Order')
+@section('title', 'Order History')
 @section('main_content')
     <div class="card">
         <div class="container-fluid">
@@ -7,12 +7,12 @@
                 <a href="{{route('order.index')}}" class="btn btn-sm btn-primary"><i class="fa-solid fa-cart-shopping px-1"></i>Current Order</a>
                 <a href="{{route('order.history')}}" class="btn btn-sm btn-success"><i class="fa-solid fa-clock-rotate-left px-1"></i> View Order history</a>
             </h6>
-            <div class="row" style="text-align:right;">
+            {{-- <div class="row" style="text-align:right;">
                 <div class="col-12">
                     <a href="{{ route('order.create') }}" class="btn btn-sm btn-primary mr-2"><i
                             class="fa-solid fa-plus px-1"></i>Place order</a>
                 </div>
-            </div>
+            </div> --}}
             <div class="table-responsive p-0" id="vue_app">
                 <table class="table align-items-center mb-0">
                     <thead>
@@ -39,11 +39,8 @@
                                         data-bs-target="#orderDetail" v-on:click="openModal(key)">
                                         View Order detail <i class="fa-solid fa-circle-info px-1"></i>
                                     </button>
-                                    <a v-if="!order[0].status" type="button" class="btn btn-danger" v-on:click="redirectPayment(order[0].token)">
-                                        Proceed To Payment <i class="fa-sharp fa-solid fa-money-bill px-1"></i>
-                                    </a>
-                                    <a v-if="!order[0].status" type="button" class="btn btn-danger" v-on:click="redirectPayment(order[0].token)">
-                                        Proceed To Payment <i class="fa-sharp fa-solid fa-money-bill px-1"></i>
+                                    <a type="button" class="btn btn-danger" v-on:click="redirectPrintBill(order[0].token)">
+                                        Print Bill  <i class="fa-sharp fa-solid fa-money-bill px-1"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -107,7 +104,7 @@
                                             <td class="text-center" v-text="returnDiscount(modal_order_key)"></td>
                                         </tr>
                                         <tr>
-                                            <td class="text-center" colspan="4">Grand Total :</td>
+                                            <td class="text-center" colspan="4">Total :</td>
                                             <td class="text-center" v-text="returnGrandTotal(modal_order_key)"></td>
                                         </tr>
                                     </tbody>
@@ -145,7 +142,7 @@
                     // button = document.getElementById("search");
                     // vm.is_loading = true;
                     // button.innerHTML = "<span>Loading....</span>";
-                    axios.post("{{ route('order.report') }}").then(function(response) {
+                    axios.post("{{ route('order.historyReport') }}").then(function(response) {
                         vm.orders = response.data;
                         console.log(vm.orders);
                         // vm.is_loading = false;
@@ -190,6 +187,10 @@
                     let vm = this;
                     window.location.href = "{{ url('/') }}/" + 'order/proceed-to-payment/' + params;
                 },
+                redirectPrintBill : function (params) {
+                    let vm = this;
+                    window.location.href = "{{ url('/') }}/" + 'order/print-bill/' + params;
+                }
             },
             mounted() {
                 let vm = this;

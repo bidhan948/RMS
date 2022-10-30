@@ -16,9 +16,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('table', TableController::class)->only('index', 'store', 'update');
     Route::resource('order', OrderController::class);
     Route::get('order/proceed-to-payment/{token}', [OrderController::class,'proceedToPayment'])->name('order.proceedPayment');
+    Route::get('order-history', [OrderController::class,'orderHistory'])->name('order.history');
     Route::post('item/report',[ItemController::class,'itemReport'])->name('item.report'); 
     Route::post('order/report',[OrderController::class,'orderReport'])->name('order.report'); 
+    Route::post('order-history/report',[OrderController::class,'historyReport'])->name('order.historyReport'); 
     Route::post('order/proceed-to-payment/{token}',[OrderController::class,'proceedPaymentSubmit'])->name('order.proceedPaymentSubmit'); 
+    Route::post('order/print-bill/{token}',[OrderController::class,'porintBill'])->name('order.printBill'); 
     Route::resource('item', ItemController::class)->only('index', 'store', 'update','edit');
     Route::resource('discount', DiscountController::class)->only('index', 'store', 'update','edit');
 });
