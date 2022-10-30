@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\RMShelper;
 use App\Http\Requests\OrderRequest;
+use App\Http\Requests\OrderUpdateRequest;
 use App\Models\menu;
 use App\Models\order;
 use App\Models\table;
@@ -86,8 +87,36 @@ class OrderController extends Controller
         ]);
     }
 
-    public function proceedPaymentSubmit(Request $request,$token)
+    public function proceedPaymentSubmit(OrderUpdateRequest $request, $token)
     {
-        dd('billing on the way');
+        DB::beginTransaction();
+        try {
+            $orders = order::query()->where('token', $token)->forceDelete();
+            foreach ($request->menu_id as $key => $menu_id) {
+                order::create([
+                    'menu_id' => $menu_id,
+                    'item_id' => $request->item_id[$key],
+                    'table_id' => $request->table_id,
+                    'quantity' => $request->quantity[$key],
+                    'price' => $request->price[$key],
+                    'total' => $request->quantity[$key] * $request->price[$key],
+                    'discount' => $request->discount,
+                    'paid_amount' => $request->grand_total,
+                    'rcv_amount' => $request->rcv_amount,
+                    'refund' => $request->refund,
+                    'token' => $token,
+                    'status' => true,
+                    'description' => $request->description
+                ]);
+            }
+            toast('Payment done successfully', "success");
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Alert::error('Something wenty wrong...');
+            return redirect()->back();
+        }
+
+        return redirect()->route('order.index');
     }
 }

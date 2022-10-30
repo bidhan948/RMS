@@ -22,7 +22,11 @@ class order extends Model
         'description',
         'discount',
         'user_id',
-        'token'
+        'token',
+        'rcv_amount',
+        'refund',
+        'paid_at',
+        'paid_amount'
     ];
 
     public function Item(): BelongsTo
@@ -45,6 +49,7 @@ class order extends Model
     {
         static::creating(function ($model) {
             $model->user_id = auth()->id();
+            $model->paid_at = now();
         });
     }
 }

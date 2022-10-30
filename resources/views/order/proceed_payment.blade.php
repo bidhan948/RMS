@@ -12,6 +12,7 @@
             </div>
             <form action="{{ route('order.proceedPaymentSubmit',$orders[0]->token) }}" method="post" enctype="multipart/form-data" style="text-align:left;">
                 @csrf
+                <input type="hidden" name="table_id" value="{{$orders[0]->table_id}}">
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="table_id" class="form-control-label">Table number<span
@@ -83,9 +84,30 @@
                         </tr>
                     </tbody>
                     <tr>
+                        <td class="text-center" colspan="4">Discount (%) :</td>
+                        <td class="text-center" colspan="1"> <input type="number" class="form-control form-control-sm" name="discount" id="discount"
+                            value="0" oninput="calculateGrandTotal()"></td>
+                    </tr>
+                    <tr>
                         <td class="text-center" colspan="4">Total :</td>
                         <td class="text-center" colspan="1"> <input type="number" class="form-control form-control-sm" name="grand_total" id="grand_total"
                             value="0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="4">Received amount :</td>
+                        <td class="text-center" colspan="1"> <input type="number" class="form-control form-control-sm" oninput="calculateGrandTotal()" name="rcv_amount" id="rcv_amount"
+                            value="0"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="4">Refund :</td>
+                        <td class="text-center" colspan="1"> <input type="number" class="form-control form-control-sm" name="refund" id="refund"
+                            value="0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="4">Note :</td>
+                        <td class="text-center" colspan="1">
+                            <textarea name="description" id="description"  class="form-control form-control-sm"></textarea>
+                        </td>
                     </tr>
                 </table>
                 <div class="col-6">
@@ -208,10 +230,13 @@
 
         function calculateGrandTotal() {
             total = 0
+            discount = +$("#discount").val() || 0;
+            rcv_amount = +$("#rcv_amount").val() || 0;
             $('.total').each(function() {
                 total += Number($(this).val()) || 0;
             });
-            $("#grand_total").val(total);
+         +$("#grand_total").val(((100-discount)/100)*total);
+            $("#refund").val(rcv_amount - (((100-discount)/100)*total));
         }
     </script>
 @endsection
