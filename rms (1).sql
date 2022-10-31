@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 13, 2022 at 04:35 AM
+-- Generation Time: Oct 31, 2022 at 04:08 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -45,7 +45,7 @@ CREATE TABLE `discounts` (
 --
 
 INSERT INTO `discounts` (`id`, `menu_id`, `discount`, `is_flat`, `description`, `deleted_at`, `created_at`, `updated_at`, `d_from`, `d_to`) VALUES
-(1, NULL, 5, 1, NULL, NULL, '2022-10-07 10:16:35', '2022-10-07 10:16:35', '2022-10-07', '2022-10-13');
+(1, NULL, 6, 1, NULL, NULL, '2022-10-07 10:16:35', '2022-10-15 20:50:41', '2022-10-07', '2022-10-13');
 
 -- --------------------------------------------------------
 
@@ -88,7 +88,8 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`id`, `menu_id`, `name`, `discount`, `price`, `user_id`, `status`, `description`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Chicken momo', 5, 220, 1, 1, 'test momo', NULL, '2022-10-05 00:12:19', '2022-10-05 02:05:40');
+(1, 1, 'Chicken momo', 5, 220, 1, 1, 'test momo', NULL, '2022-10-05 00:12:19', '2022-10-05 02:05:40'),
+(2, 1, 'steam momo', 0, 100, 1, 1, 'test', NULL, '2022-10-16 20:55:00', '2022-10-16 20:55:00');
 
 -- --------------------------------------------------------
 
@@ -140,7 +141,45 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (7, '2022_10_05_074247_add_description_to_items_table', 4),
 (8, '2022_10_05_092203_add_mrp_to_items_table', 5),
 (9, '2022_10_05_145549_create_discounts_table', 6),
-(10, '2022_10_06_034447_add_from_to_discounts_table', 7);
+(10, '2022_10_06_034447_add_from_to_discounts_table', 7),
+(12, '2022_10_18_021657_create_tables_table', 8),
+(13, '2022_10_16_024227_create_orders_table', 9);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `table_id` int(10) UNSIGNED NOT NULL,
+  `menu_id` int(10) UNSIGNED NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `price` double NOT NULL DEFAULT 0,
+  `quantity` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `discount` double NOT NULL DEFAULT 0,
+  `total` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `paid_amount` double(100,2) NOT NULL DEFAULT 0.00,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
+  `token` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `rcv_amount` double(100,2) NOT NULL DEFAULT 0.00,
+  `refund` double(100,2) NOT NULL DEFAULT 0.00,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `paid_at` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `table_id`, `menu_id`, `item_id`, `price`, `quantity`, `discount`, `total`, `paid_amount`, `status`, `token`, `description`, `user_id`, `rcv_amount`, `refund`, `deleted_at`, `created_at`, `updated_at`, `paid_at`) VALUES
+(3, 1, 1, 1, 220, 1, 5, 220, 399.00, 1, '0xtxSicHCLhms1btdtCvxezvYgE1FLBU', 'this is tedt....', 1, 500.00, 101.00, NULL, '2022-10-30 03:06:55', '2022-10-30 03:06:55', '2022-10-30 08:51:55'),
+(4, 1, 1, 2, 100, 2, 5, 200, 399.00, 1, '0xtxSicHCLhms1btdtCvxezvYgE1FLBU', 'this is tedt....', 1, 500.00, 101.00, NULL, '2022-10-30 03:06:55', '2022-10-30 03:06:55', '2022-10-30 08:51:55');
 
 -- --------------------------------------------------------
 
@@ -175,6 +214,28 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tables`
+--
+
+CREATE TABLE `tables` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tables`
+--
+
+INSERT INTO `tables` (`id`, `name`, `description`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 'Table no. 1', 'first table...', NULL, '2022-10-17 20:42:39', '2022-10-17 20:42:39');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -194,7 +255,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'superadmin', 'superadmin@rms.com', '2022-09-29 09:08:59', '$2y$10$gzgr5.h0Qca03F8pXr6jvO.Wg//d44DPcXLelchg6jKmq6X8EGniO', 'FU91SJJV6fnYPm6DyfRboeAbbcfCHXKYw0E7vcxd4XMXF6zEy2o3yLRquxZM', '2022-09-29 09:08:59', '2022-09-29 09:08:59');
+(1, 'superadmin', 'superadmin@rms.com', '2022-09-29 09:08:59', '$2y$10$gzgr5.h0Qca03F8pXr6jvO.Wg//d44DPcXLelchg6jKmq6X8EGniO', 'q8Hm9tLX4xysE5GmySe5ubfSIZGwxDzij4H7knSEOBFzj1qJxTBI1nKDC6J9', '2022-09-29 09:08:59', '2022-09-29 09:08:59');
 
 --
 -- Indexes for dumped tables
@@ -232,6 +293,12 @@ ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `password_resets`
 --
 ALTER TABLE `password_resets`
@@ -244,6 +311,12 @@ ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
+
+--
+-- Indexes for table `tables`
+--
+ALTER TABLE `tables`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -272,7 +345,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `menus`
@@ -284,13 +357,25 @@ ALTER TABLE `menus`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tables`
+--
+ALTER TABLE `tables`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
