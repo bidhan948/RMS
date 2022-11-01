@@ -12,12 +12,19 @@
 
     <title>PRINT::BILL</title>
     <style>
-        *{
+        * {
             box-sizing: border-box;
             margin: 0;
         }
-        #receipt_heading{
+
+        #receipt_heading {
             padding-left: 120px;
+        }
+        .ml-105{
+            margin-left:105px !important;
+        }
+        .ml-110{
+            margin-left:110px !important;
         }
     </style>
 </head>
@@ -32,10 +39,25 @@
                 </strong>
             </p>
             <h4 id="receipt_heading">RECEIPT</h4>
-            <p class="font-weight-bold">
+            <p class="font-weight-bold mb-0">
                 <strong>
                     @for ($i = 0; $i < 32; $i++)
                         *
+                    @endfor
+                </strong>
+            </p>
+            <span id="receipt_heading" class="mb-0">
+                {{ date('Y-m-d') }}
+            </span>
+            <p class="font-weight-bold mb-0 mt-0">
+                <strong>
+                    @for ($i = 0; $i < 34; $i++)
+                        -
+                    @endfor
+                </strong><br>
+                <strong>
+                    @for ($i = 0; $i < 34; $i++)
+                        -
                     @endfor
                 </strong>
             </p>
