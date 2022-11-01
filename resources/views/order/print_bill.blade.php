@@ -20,11 +20,13 @@
         #receipt_heading {
             padding-left: 120px;
         }
-        .ml-105{
-            margin-left:105px !important;
+
+        .ml-105 {
+            margin-left: 105px !important;
         }
-        .ml-110{
-            margin-left:110px !important;
+
+        .ml-110 {
+            margin-left: 110px !important;
         }
     </style>
 </head>
@@ -58,6 +60,43 @@
                 <strong>
                     @for ($i = 0; $i < 34; $i++)
                         -
+                    @endfor
+                </strong>
+            </p>
+            <table class="table table-borderless">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($orders as $order)
+                        <tr>
+                            <td style="font-size: 0.8rem;">{{$order->Item->name}}</td>
+                            <td style="font-size: 0.8rem;">{{$order->quantity}}</td>
+                            <td style="font-size: 0.8rem;">{{$order->total}}</td>
+                        </tr>
+                    @endforeach
+                    <tr>
+                        <td class="text-center" colspan="2" style="font-size: 0.8rem;">Discount :</td>
+                        <td style="font-size: 0.8rem;">{{$orders[0]->discount .' %'}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="2" style="font-size: 0.8rem;">Total :</td>
+                        <td style="font-size: 0.8rem;">{{$orders[0]->paid_amount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="font-weight-bold mb-0">
+                <strong>
+                    @for ($i = 0; $i < 12; $i++)
+                        *
+                    @endfor
+                    THANK YOU
+                    @for ($i = 0; $i < 12; $i++)
+                        *
                     @endfor
                 </strong>
             </p>

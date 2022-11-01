@@ -29,7 +29,7 @@ class OrderRepo
                 ->where('status',true)
                 ->latest()
                 ->get()
-                ->groupBy('table_id')
+                ->groupBy('token')
                 ->values()
         );
     }

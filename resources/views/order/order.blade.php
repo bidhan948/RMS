@@ -42,9 +42,6 @@
                                     <a v-if="!order[0].status" type="button" class="btn btn-danger" v-on:click="redirectPayment(order[0].token)">
                                         Proceed To Payment <i class="fa-sharp fa-solid fa-money-bill px-1"></i>
                                     </a>
-                                    <a v-if="!order[0].status" type="button" class="btn btn-danger" v-on:click="redirectPayment(order[0].token)">
-                                        Proceed To Payment <i class="fa-sharp fa-solid fa-money-bill px-1"></i>
-                                    </a>
                                 </td>
                             </tr>
                         </template>
