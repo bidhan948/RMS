@@ -81,7 +81,7 @@
                                     readonly required>
                             </td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-danger mt-2"><i class="fa-solid fa-times px-1" onclick="removeRow(0)"></i> Remove</a>
+                                <a class="btn btn-sm btn-danger mt-2" onclick="removeRow(0)"><i class="fa-solid fa-times px-1"></i> Remove</a>
                             </td>
                         </tr>
                     </tbody>
@@ -123,8 +123,7 @@
                         if (response.data.count) {
                             $("#table_body").html(response.data.html);
                             $("#grand_total").val(response.data.grand_total);
-                            i = response.data.count;
-                            console.log(response);   
+                            i = response.data.count;  
                         }else{
                             i = 1;
                         }
@@ -163,7 +162,7 @@
                             +'<td class="text-center">'
                                 +'<input type="number" class="form-control form-control-sm total" name="total[]" id="total_'+i+'" readonly required></td>'
                             +'<td class="text-center">'
-                                +'<a class="btn btn-sm btn-danger mt-2"><i class="fa-solid fa-times px-1" onclick="removeRow('+i+')"></i> Remove</a></td></tr>';
+                                +'<a class="btn btn-sm btn-danger mt-2" onclick="removeRow('+i+')"><i class="fa-solid fa-times px-1"></i> Remove</a></td></tr>';
                 
                 $("#table_body").append(html);
                 i++;
@@ -214,6 +213,7 @@
         
         function removeRow(params)
         {
+            console.log($("#row_"+params));
             $("#row_"+params).remove();
             calculateGrandTotal();
         }
