@@ -144,4 +144,29 @@ class OrderController extends Controller
             'orders' => $orders,
         ]);
     }
+
+    public function editTable($token)
+    {
+        $orders = order::query()->where('token', $token)->get();
+
+        abort_if(!$orders->count(), 404);
+        abort_if($orders[0]->status, 404);
+
+        $table = table::query()->where('id', $orders[0]->table_id)->first();
+
+        if ($table == null) {
+            Alert::error("Table Not assigned");
+            return redirect()->back();
+        }
+
+        return view(
+            'order.edit-table',
+            [
+                'orders' => $orders,
+                'tables' => table::query()->get(),
+                'menus' => menu::query()->get(),
+                'table' => $table
+            ]
+        );
+    }
 }

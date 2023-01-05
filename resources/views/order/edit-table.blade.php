@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title', 'create Order')
 @section('main_content')
-    <div class="card" id="vue_app" style="overflow-x: scroll !important;">
+    <div class="card" id="vue_app">
         <div class="container-fluid">
             <h6 class="mb-2 p-2">Order</h6>
             <div class="row" style="text-align:right;">
@@ -12,16 +12,18 @@
             </div>
             <form action="{{ route('order.store') }}" method="post" enctype="multipart/form-data" style="text-align:left;">
                 @csrf
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="table_id" class="form-control-label">Table number<span
-                                class="text-danger font-weight-bold">*</span></label>
-                        <select name="table_id" id="table_id" class="form-control"required>
-                            <option value="">{{ __('--SELECT--') }}</option>
-                            @foreach ($tables as $key => $table)
-                                <option value="{{ $table->id }}">{{ $table->name }}</option>
-                            @endforeach
-                        </select>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="table_id" class="form-control-label">Table number<span
+                                    class="text-danger font-weight-bold">*</span></label>
+                            <select name="table_id" class="form-control" required disabled>
+                                    <option value="{{ $table->id }}" selected>{{ $table->name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6" style="margin-top:2rem;">
+                        <a class="btn btn-success">Transfer Table</a>
                     </div>
                 </div>
                 <table class="table align-items-center mb-0" id="table">
@@ -111,7 +113,7 @@
             $("#table_id").on("change", function() {
                var table_id = $("#table_id").val();
                 if (table_id == "") {
-                    alert("Please select table no.");
+                    alert("Please select tgable no.");
                     $("#table").css("display", "none");
                 } else {
                     axios.get("{{route('api.getPreviousLog')}}",{
@@ -125,8 +127,6 @@
                             $("#grand_total").val(response.data.grand_total);
                             i = response.data.count;  
                         }else{
-                            $("#table_body").html("");
-                            calculateGrandTotal();
                             i = 1;
                         }
                     }).catch(function(error){
