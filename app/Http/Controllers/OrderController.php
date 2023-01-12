@@ -117,7 +117,7 @@ class OrderController extends Controller
             return redirect()->back();
         }
 
-        return redirect()->route('order.index');
+        return redirect()->route('order.printBill', ['token' => $token]);
     }
 
     public function orderHistory(): View
@@ -152,10 +152,28 @@ class OrderController extends Controller
         abort_if(!$orders->count(), 404);
         abort_if($orders[0]->status, 404);
 
-        $table = table::query()->where('id', $orders[0]->table_id)->first();
+        try {
+            $table = table::query()->where('id', $orders[0]->table_id)->first();
 
-        if ($table == null) {
-            Alert::error("Table Not assigned");
+            if ($table == null) {
+                Alert::error("Table Not assigned");
+                return redirect()->back();
+            }
+
+            $order_logs = order::query()
+                ->where('status', false)
+                ->get()
+                ->groupBy('table_id');
+
+            $table_array = [];
+
+            foreach ($order_logs as $key => $order) {
+                $table_array[] = $key;
+            }
+
+            $free_tables = table::query()->whereNotIn('id', $table_array)->get();
+        } catch (\Exception $e) {
+            Alert::error("Something went wrong..");
             return redirect()->back();
         }
 
@@ -165,8 +183,34 @@ class OrderController extends Controller
                 'orders' => $orders,
                 'tables' => table::query()->get(),
                 'menus' => menu::query()->get(),
-                'table' => $table
+                'table' => $table,
+                'free_tables' => $free_tables,
+                'token' => $token
             ]
         );
+    }
+
+    public function editTableSubmit(Request $request, $token)
+    {
+        DB::beginTransaction();
+        try {
+            if ($request->table_id_to == '') {
+                Alert::error("First choose table");
+                return redirect()->back();
+            }
+            order::query()->where('token', $token)->update(
+                [
+                    'table_id' => $request->table_id_to
+                ]
+            );
+            toast('Table Transferred Successfully', "success");
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Alert::error("Something Went wrong....");
+            return redirect()->back();
+        }
+
+        return redirect()->route('order.index');
     }
 }

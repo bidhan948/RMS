@@ -10,92 +10,35 @@
                             class="fa-solid fa-plus px-1"></i>Place order</a>
                 </div>
             </div>
-            <form action="{{ route('order.store') }}" method="post" enctype="multipart/form-data" style="text-align:left;">
+            <form action="{{ route('order.update_table',$token) }}" method="post" enctype="multipart/form-data" style="text-align:left;">
                 @csrf
+                @method('PUT')
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-md-6 col-sm-12">
                         <div class="form-group">
-                            <label for="table_id" class="form-control-label">Table number<span
+                            <label for="table_id" class="form-control-label">Table number (From)<span
                                     class="text-danger font-weight-bold">*</span></label>
                             <select name="table_id" class="form-control" required disabled>
                                     <option value="{{ $table->id }}" selected>{{ $table->name }}</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-6" style="margin-top:2rem;">
-                        <a class="btn btn-success">Transfer Table</a>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="table_id_to" class="form-control-label">Table number (To)<span
+                                    class="text-danger font-weight-bold">*</span></label>
+                            <select name="table_id_to" class="form-control" required>
+                                <option value="" selected>{{__('--SELECT--')}}</option>
+                                @foreach ($free_tables as $free_table)
+                                    <option value="{{ $free_table->id }}">{{ $free_table->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <table class="table align-items-center mb-0" id="table">
-                    <thead>
-                        <tr>
-                            <th
-                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">
-                                Menu
-                            </th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                Item
-                            </th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                Quantity
-                            </th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                Price
-                            </th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                Total
-                            </th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                <a class="btn btn-sm btn-primary mt-2" id="addMore"><i class="fa-solid fa-plus px-1"></i>
-                                    Add more</a>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="table_body">
-                        <tr id="row_0">
-                            <td class="text-center">
-                                <select name="menu_id[]" id="menu_id_0" class="form-control form-control-sm"
-                                    onchange="returnItem(0)">
-                                    <option value="">{{ __('--SELECT--') }}</option>
-                                    @foreach ($menus as $menu)
-                                        <option value="{{ $menu->id }}">{{ $menu->name }}</option>
-                                    @endforeach
-                                    </option>
-                                </select>
-                            </td>
-                            <td class="text-center" id="td_item_0">
-                                <select name="item_id[]" id="item_id_0" class="form-control form-control-sm"
-                                    onchange="returnPrice(0)" required>
-                                    <option value="">{{ __('--SELECT--') }}</option>
-                                    </option>
-                                </select>
-                            </td>
-                            <td class="text-center">
-                                <input type="number" class="form-control form-control-sm" name="quantity[]" id="quantity_0"
-                                    value="0" oninput="calculateRowTotal(0)" required>
-                            </td>
-                            <td class="text-center">
-                                <input type="number" class="form-control form-control-sm" name="price[]" id="price_0"
-                                    readonly required>
-                            </td>
-                            <td class="text-center">
-                                <input type="number" class="form-control form-control-sm total" name="total[]" id="total_0"
-                                    readonly required>
-                            </td>
-                            <td class="text-center">
-                                <a class="btn btn-sm btn-danger mt-2" onclick="removeRow(0)"><i class="fa-solid fa-times px-1"></i> Remove</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tr>
-                        <td class="text-center" colspan="4">Total :</td>
-                        <td class="text-center" colspan="1"> <input type="number" class="form-control form-control-sm" name="grand_total" id="grand_total"
-                            value="0" readonly></td>
-                    </tr>
-                </table>
-                <div class="col-6">
-                    <button class="btn btn-primary" type="submit"
-                        onclick="return confirm('Are you sure you want to add to cart ?');">Add to cart</button>
+                    <div class="col-6">
+                        <button class="btn btn-primary" type="submit"
+                            onclick="return confirm('Are you sure you want to Transfer table ?');">Transfer Table</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -106,127 +49,7 @@
         integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        let i = 1;
-        $(function() {
-            $("#table").css("display", "none");
-
-            $("#table_id").on("change", function() {
-               var table_id = $("#table_id").val();
-                if (table_id == "") {
-                    alert("Please select tgable no.");
-                    $("#table").css("display", "none");
-                } else {
-                    axios.get("{{route('api.getPreviousLog')}}",{
-                        params :{
-                            table_id : table_id
-                        }
-                    }).then(function(response){
-                        $("#table").css("display", "");
-                        if (response.data.count) {
-                            $("#table_body").html(response.data.html);
-                            $("#grand_total").val(response.data.grand_total);
-                            i = response.data.count;  
-                        }else{
-                            i = 1;
-                        }
-                    }).catch(function(error){
-                        alert("Something went wrong...");
-                    });
-                }
-            });
-
-            $("#addMore").on("click", function() {
-                html = '<tr id="row_'+i+'">'
-                            +'<td class="text-center">'
-                                +'<select name="menu_id[]" id="menu_id_'+i+'" class="form-control form-control-sm"'
-                                    +'onchange="returnItem('+i+')" required>'
-                                    +'<option value="">{{ __("--SELECT--") }}</option>'
-                                    +'@foreach ($menus as $menu)'
-                                        +'<option value="{{ $menu->id }}">{{ $menu->name }}</option>'
-                                    +'@endforeach'
-                                    +'</option>'
-                                +'</select>'
-                            +'</td>'
-                            +'<td class="text-center" id="td_item_'+i+'">'
-                                +'<select name="item_id[]" id="item_id_'+i+'" class="form-control form-control-sm"'
-                                    +'onchange="returnPrice('+i+')" required>'
-                                    +'<option value="">{{ __("--SELECT--") }}</option>'
-                                    +'</option>'
-                                +'</select>'
-                            +'</td>'
-                            +'<td class="text-center">'
-                                +'<input type="number" class="form-control form-control-sm" name="quantity[]" id="quantity_'+i+'"'
-                                    +'value="0" oninput="calculateRowTotal('+i+')" required>'
-                            +'</td>'
-                            +'<td class="text-center">'
-                                +'<input type="number" class="form-control form-control-sm" name="price[]" id="price_'+i+'"readonly required>'
-                            +'</td>'
-                            +'<td class="text-center">'
-                                +'<input type="number" class="form-control form-control-sm total" name="total[]" id="total_'+i+'" readonly required></td>'
-                            +'<td class="text-center">'
-                                +'<a class="btn btn-sm btn-danger mt-2" onclick="removeRow('+i+')"><i class="fa-solid fa-times px-1"></i> Remove</a></td></tr>';
-                
-                $("#table_body").append(html);
-                i++;
-            });
-        });
-
-        function returnItem(params) {
-            menu_id = $("#menu_id_" + params).val();
-            axios.get("{{ route('api.getItemByMenu') }}", {
-                params: {
-                    menu_id: menu_id,
-                    index: params
-                }
-            }).then(function(response) {
-                $("#td_item_" + params).html(response.data.html);
-            }).catch(function(error) {
-                alert("Something went wrong...");
-            });
-        }
-
-        function returnPrice(params) {
-            item_id = $("#item_id_" + params).val();
-            if (item_id == '') {
-                alert("Please select item");
-                $("#quantity_" + params).val(0);
-                $("#price_" + params).val(0);
-                $("#total_" + params).val(0);
-            } else {
-                axios.get("{{ route('api.getItemPrice') }}", {
-                    params: {
-                        item_id: item_id
-                    }
-                }).then(function(response) {
-                    $("#price_" + params).val(response.data.price);
-                    calculateRowTotal(params);
-                }).catch(function(error) {
-                    alert("Something went wrong...");
-                });
-            }
-        }
-
-        function calculateRowTotal(params) {
-            quantity = +$("#quantity_" + params).val() || 0;
-            price = +$("#price_" + params).val() || 0;
-            $("#total_" + params).val(quantity * price);
-            calculateGrandTotal();
-        }
-        
-        function removeRow(params)
-        {
-            console.log($("#row_"+params));
-            $("#row_"+params).remove();
-            calculateGrandTotal();
-        }
-
-        function calculateGrandTotal() {
-            total = 0
-            $('.total').each(function() {
-                total += Number($(this).val()) || 0;
-            });
-            $("#grand_total").val(total);
-        }
+      
     </script>
 @endsection
 

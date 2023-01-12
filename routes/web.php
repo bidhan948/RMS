@@ -17,6 +17,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('order', OrderController::class);
     Route::get('order/proceed-to-payment/{token}', [OrderController::class,'proceedToPayment'])->name('order.proceedPayment');
     Route::get('order/edit-table/{token}', [OrderController::class,'editTable'])->name('order.editTable');
+    Route::PUT('order/edit-table/{token}', [OrderController::class,'editTableSubmit'])->name('order.update_table');
     Route::get('order-history', [OrderController::class,'orderHistory'])->name('order.history');
     Route::post('item/report',[ItemController::class,'itemReport'])->name('item.report'); 
     Route::post('order/report',[OrderController::class,'orderReport'])->name('order.report'); 
